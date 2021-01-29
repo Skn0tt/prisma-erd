@@ -30,5 +30,5 @@ async function parseDatamodel(model) {
 
 export default async (req, res) => {
   const datamodel = await parseDatamodel(req.body);
-  return res.status(200).send(datamodel);
+  res.status(200).send(datamodel);
 };
