@@ -10,7 +10,11 @@ const engineBasePath = path.resolve(
   "engines"
 );
 
-const engine = path.join(engineBasePath, `query-engine-${process.platform}`);
+const allEngines = fs.readdirSync(engineBasePath);
+const queryEngine = allEngines.find((engine) =>
+  engine.startsWith("query-engine")
+);
+const engine = path.join(engineBasePath, queryEngine);
 
 async function parseDatamodel(model) {
   const modelB64 = Buffer.from(model).toString("base64");
@@ -30,7 +34,6 @@ async function parseDatamodel(model) {
 }
 
 export default async (req, res) => {
-  console.log(fs.readdirSync(engineBasePath));
   const datamodel = await parseDatamodel(req.body);
   res.status(200).send(datamodel);
 };
