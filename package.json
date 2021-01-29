@@ -1,5 +1,15 @@
 {
+  "scripts": {
+    "build": "parcel build ./src/*.html",
+    "build:watch": "parcel watch ./src/*.html"
+  },
   "dependencies": {
-    "@prisma/engine-core": "^2.15.0"
+    "@prisma/engine-core": "^2.15.0",
+    "mermaid": "^8.9.0",
+    "parcel": "^1.12.4",
+    "water.css": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.3"
   }
 }

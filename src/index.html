@@ -5,30 +5,107 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="../node_modules/water.css/out/water.css" />
   </head>
   <body>
-    <textarea id="schema-input"> </textarea>
+    <h1>Prisma 👉 ER Diagram</h1>
+    <textarea id="schema-input">
+model User {
+  id             Int       @default(autoincrement()) @id
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  name           String
+  username       String    @unique
+  email          String    @unique
+  hashedPassword String?
+  role           String    @default("user")
+  sessions       Session[]
+  calendars      ConnectedCalendar[]
+}
+
+model Session {
+  id                 Int       @default(autoincrement()) @id
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  expiresAt          DateTime?
+  handle             String    @unique
+  user               User?     @relation(fields: [userId], references: [id])
+  userId             Int?
+  hashedSessionToken String?
+  antiCSRFToken      String?
+  publicData         String?
+  privateData        String?
+}
+
+enum ConnectedCalendarStatus {
+  active
+}
+
+model ConnectedCalendar {
+  id  Int @id @default(autoincrement())
+  name String
+  caldavAddress String
+  username String
+  encryptedPassword String
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+  status ConnectedCalendarStatus
+  type String
+}
+
+model Meeting {
+  id  Int @id @default(autoincrement())
+  name String
+  link String
+  owner User @relation(fields: [ownerName], references: [username])
+  ownerName String
+  description String
+  duration Int
+  timezone Int
+  startDate DateTime
+  endDate DateTime
+  schedule Schedule @relation(fields: [scheduleId], references: [id])
+  scheduleId Int
+  location String
+  bookings Booking[]
+}
+
+model DailySchedule {
+    id Int @id @default(autoincrement())
+    day String
+    startTime String
+    endTime String
+    schedule Schedule @relation(fields: [scheduleId], references: [id])
+    scheduleId Int
+}
+
+model Schedule {
+  id Int @id @default(autoincrement())
+  name String
+  dailySchedules DailySchedule[]
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+}
+
+model Booking {
+  id Int @id @default(autoincrement())
+  meeting Meeting @relation(fields: [meetingId], references: [id])
+  meetingId Int
+  inviteeEmail String
+  date DateTime
+}</textarea
+    >
 
     <button id="transform">Transform</button>
 
-    <code id="output"> </code>
+    <div id="graphDiv"></div>
 
-    <script>
-      document.getElementById("transform").onclick = async () => {
-        const input = document.getElementById("schema-input").value;
+    <footer>
+      <p>Powered by <a href="https://mermaid-js.github.io">mermaid.js</a></p>
 
-        const response = await fetch("/api/parse-dml", {
-          method: "POST",
-          body: input,
-          headers: {
-            "Content-Type": "text/plain",
-          },
-        });
+      <p>Built with ❤️ by <a href="https://twitter.com/skn0tt">@skn0tt</a></p>
+    </footer>
 
-        const dml = await response.text();
-
-        alert(dml);
-      };
-    </script>
+    <script src="./index.ts"></script>
   </body>
 </html>
