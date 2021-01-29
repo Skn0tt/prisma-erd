@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "zeko369",
+      "name": "Fran Zekan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3064377?v=4",
+      "profile": "https://github.com/Zeko369",
+      "contributions": [
+        "design"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "prisma-erd",
+  "projectOwner": "Skn0tt",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
