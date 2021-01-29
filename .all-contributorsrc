@@ -6,6 +6,18 @@
   "commit": false,
   "contributors": [
     {
+      "login": "Skn0tt",
+      "name": "Simon Knott",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14912729?v=4",
+      "profile": "https://github.com/Skn0tt",
+      "contributions": [
+        "code",
+        "design",
+        "ideas",
+        "maintenance"
+      ]
+    },
+    {
       "login": "zeko369",
       "name": "Fran Zekan",
       "avatar_url": "https://avatars.githubusercontent.com/u/3064377?v=4",
@@ -20,5 +32,6 @@
   "projectOwner": "Skn0tt",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitConvention": "none"
 }
