@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <textarea id="schema-input"> </textarea>
+
+    <button id="transform">Transform</button>
+
+    <code id="output"> </code>
+
+    <script>
+      document.getElementById("transform").onclick = async () => {
+        const input = document.getElementById("schema-input").value;
+
+        const response = await fetch("/api/parse-dml", {
+          method: "POST",
+          body: input,
+          headers: {
+            "Content-Type": "text/plain",
+          },
+        });
+
+        const dml = await response.text();
+
+        alert(dml);
+      };
+    </script>
+  </body>
+</html>

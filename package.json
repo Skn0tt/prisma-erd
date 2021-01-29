@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@prisma/engine-core": "^2.15.0"
+  }
+}
