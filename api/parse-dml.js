@@ -1,5 +1,6 @@
 import * as path from "path";
 import * as child_process from "child_process";
+import fs from "fs";
 
 const engineBasePath = path.resolve(
   __dirname,
@@ -29,6 +30,7 @@ async function parseDatamodel(model) {
 }
 
 export default async (req, res) => {
+  console.log(fs.readdirSync(engineBasePath));
   const datamodel = await parseDatamodel(req.body);
   res.status(200).send(datamodel);
 };
