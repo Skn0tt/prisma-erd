@@ -16,6 +16,32 @@ const queryEngine = allEngines.find((engine) =>
 );
 const engine = path.join(engineBasePath, queryEngine);
 
+/**
+ * @param {string} parsed
+ */
+function getDataModelFieldWithoutParsing(parsed) {
+  const startOfField = parsed.indexOf('"datamodel"');
+  const openingBracket = parsed.indexOf("{", startOfField);
+
+  let numberOfOpeningBrackets = 0;
+  let closingBracket = openingBracket;
+  while (closingBracket < parsed.length) {
+    const char = parsed[closingBracket++];
+    
+    if (char === "{") {
+      numberOfOpeningBrackets++;
+    } else if (char === "}") {
+      numberOfOpeningBrackets--;
+
+      if (numberOfOpeningBrackets === 0) {
+        break;
+      }
+    }
+  }
+
+  return parsed.slice(openingBracket, closingBracket);
+}
+
 async function parseDatamodel(model) {
   const modelB64 = Buffer.from(model).toString("base64");
 
@@ -30,7 +56,7 @@ async function parseDatamodel(model) {
     });
   });
 
-  return parsed;
+  return getDataModelFieldWithoutParsing(parsed);
 }
 
 export default async (req, res) => {

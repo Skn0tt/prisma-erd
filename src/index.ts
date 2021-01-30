@@ -17,6 +17,8 @@ document.getElementById("transform").onclick = async () => {
     },
   });
 
+  console.log("hello");
+
   const dml = await response.json();
 
   console.log(dml);
@@ -25,41 +27,39 @@ document.getElementById("transform").onclick = async () => {
 };
 
 interface DML {
-  datamodel: {
-    enums: any[];
-    models: {
+  enums: any[];
+  models: {
+    name: string;
+    isEmbedded: boolean;
+    dbName: string | null;
+    fields: {
       name: string;
-      isEmbedded: boolean;
-      dbName: string | null;
-      fields: {
-        name: string;
-        hasDefaultValue: boolean;
-        isGenerated: boolean;
-        isId: boolean;
-        isList: boolean;
-        isReadOnly: boolean;
-        isRequired: boolean;
-        isUnique: boolean;
-        isUpdatedAt: boolean;
-        kind: "scalar" | "object" | "enum";
-        type: string;
-        relationFromFields?: any[];
-        relationName?: string;
-        relationOnDelete?: string;
-        relationToFields?: any[];
-      }[];
-      idFields: any[];
-      uniqueFields: any[];
-      uniqueIndexes: any[];
+      hasDefaultValue: boolean;
       isGenerated: boolean;
+      isId: boolean;
+      isList: boolean;
+      isReadOnly: boolean;
+      isRequired: boolean;
+      isUnique: boolean;
+      isUpdatedAt: boolean;
+      kind: "scalar" | "object" | "enum";
+      type: string;
+      relationFromFields?: any[];
+      relationName?: string;
+      relationOnDelete?: string;
+      relationToFields?: any[];
     }[];
-  };
+    idFields: any[];
+    uniqueFields: any[];
+    uniqueIndexes: any[];
+    isGenerated: boolean;
+  }[];
 }
 
 function drawDiagram(dml: DML) {
   let diagram = "erDiagram";
 
-  const classes = dml.datamodel.models
+  const classes = dml.models
     .map(
       (model) =>
         `  ${model.name} {
@@ -79,7 +79,7 @@ ${model.fields
     .join("\n\n");
 
   let relationShips = "";
-  for (const model of dml.datamodel.models) {
+  for (const model of dml.models) {
     for (const field of model.fields) {
       if (field.relationFromFields?.length > 0) {
         const relationshipName = field.name;
@@ -92,9 +92,7 @@ ${model.fields
         } else if (!field.isRequired) {
           thisSideMultiplicity = "|o";
         }
-        const otherModel = dml.datamodel.models.find(
-          (model) => model.name == otherSide
-        );
+        const otherModel = dml.models.find((model) => model.name == otherSide);
         const otherField = otherModel.fields.find(
           ({ relationName }) => relationName === field.relationName
         );
