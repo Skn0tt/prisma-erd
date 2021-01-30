@@ -6,11 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="../node_modules/water.css/out/light.css" />
-    <script async defer data-domain="prisma-erd.simonknott.de" src="https://plausible.io/js/plausible.js"></script>
+    <script
+      async
+      defer
+      data-domain="prisma-erd.simonknott.de"
+      src="https://plausible.io/js/plausible.js"
+    ></script>
   </head>
   <body>
     <h1>Prisma 👉 ER Diagram</h1>
-    <textarea id="schema-input" style="font-family: monospace;">
+    <textarea id="schema-input" style="font-family: monospace">
 model User {
   id             Int       @default(autoincrement()) @id
   createdAt      DateTime  @default(now())
@@ -104,7 +109,12 @@ model Booking {
     <footer>
       <p>Powered by <a href="https://mermaid-js.github.io">mermaid.js</a></p>
 
-      <p>Built with ❤️ by <a href="https://twitter.com/skn0tt">@skn0tt</a></p>
+      <p>
+        Built with ❤️ by <a href="https://twitter.com/skn0tt">@skn0tt</a>
+        <br />
+        Star on Github:
+        <a href="https://github.com/skn0tt/prisma-erd">skn0tt/prisma-erd</a>
+      </p>
     </footer>
 
     <script src="./index.ts"></script>
