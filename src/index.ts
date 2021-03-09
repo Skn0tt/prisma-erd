@@ -121,6 +121,11 @@ function renderWithMermaid(input: string) {
     input,
     (svg: string) => (graphDiv.innerHTML = svg)
   );
+
+  const svgEl = document.getElementById(svgId);
+
+  svgEl.setAttribute("height", undefined);
+  svgEl.setAttribute("width", undefined);
 }
 
 const downloadHref = document.getElementById("download") as HTMLAnchorElement;
