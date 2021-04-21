@@ -87,8 +87,12 @@ ${model.fields
 }
 
 export default async (req, res) => {
-  const datamodelString = await parseDatamodel(req.body);
-  const dml: DML = JSON.parse(datamodelString);
-  const mermaid = renderDml(dml);
-  res.status(200).send(mermaid);
+  try {
+    const datamodelString = await parseDatamodel(req.body);
+    const dml: DML = JSON.parse(datamodelString);
+    const mermaid = renderDml(dml);
+    res.status(200).send(mermaid);
+  } catch (error) {
+    res.status(400).send(error)
+  }
 };

@@ -17,6 +17,11 @@ document.getElementById("transform").onclick = async () => {
     },
   });
 
+  if (response.status !== 200) {
+    window.alert(await response.text());
+    return;
+  }
+
   const mermaid = await response.text();
 
   console.log(mermaid);
