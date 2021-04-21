@@ -42,7 +42,7 @@ function getDataModelFieldWithoutParsing(parsed) {
   return parsed.slice(openingBracket, closingBracket);
 }
 
-async function parseDatamodel(model) {
+export async function parseDatamodel(model) {
   const modelB64 = Buffer.from(model).toString("base64");
 
   const parsed = await new Promise((resolve) => {
