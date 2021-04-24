@@ -27,7 +27,7 @@ function getDataModelFieldWithoutParsing(parsed) {
   let closingBracket = openingBracket;
   while (closingBracket < parsed.length) {
     const char = parsed[closingBracket++];
-    
+
     if (char === "{") {
       numberOfOpeningBrackets++;
     } else if (char === "}") {
@@ -42,14 +42,19 @@ function getDataModelFieldWithoutParsing(parsed) {
   return parsed.slice(openingBracket, closingBracket);
 }
 
-async function parseDatamodel(model) {
+export async function parseDatamodel(model) {
   const modelB64 = Buffer.from(model).toString("base64");
 
-  const parsed = await new Promise((resolve) => {
+  const parsed = await new Promise((resolve, reject) => {
     const process = child_process.exec(
       `${engine} --datamodel=${modelB64} cli dmmf`
     );
     let output = "";
+    process.stderr.on("data", (l) => {
+      if (l.includes("error:")) {
+        reject(l.slice(l.indexOf("error:"), l.indexOf("\\n")));
+      }
+    });
     process.stdout.on("data", (d) => (output += d));
     process.on("exit", () => {
       resolve(output);
