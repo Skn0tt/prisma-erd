@@ -41,8 +41,9 @@ ${model.fields
   .filter(
     (field) =>
       field.kind !== "object" &&
-      !model.fields.find(({ relationFromFields }) =>
-        relationFromFields.includes(field.name)
+      !model.fields.find(
+        ({ relationFromFields }) =>
+          relationFromFields && relationFromFields.includes(field.name)
       )
   )
   .map((field) => `    ${field.type} ${field.name}`)
@@ -55,7 +56,7 @@ ${model.fields
   let relationShips = "";
   for (const model of dml.models) {
     for (const field of model.fields) {
-      if (field.relationFromFields.length > 0) {
+      if (field.relationFromFields && field.relationFromFields.length > 0) {
         const relationshipName = field.name;
         const thisSide = model.name;
         const otherSide = field.type;
@@ -93,6 +94,7 @@ export default async (req, res) => {
     const mermaid = renderDml(dml);
     res.status(200).send(mermaid);
   } catch (error) {
+    console.log(error);
     res.status(400).send(error);
   }
 };
