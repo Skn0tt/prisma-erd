@@ -1,33 +1,34 @@
 import { parseDatamodel } from "./parse-dml";
 
+export interface DMLModel {
+  name: string;
+  isEmbedded: boolean;
+  dbName: string | null;
+  fields: {
+    name: string;
+    hasDefaultValue: boolean;
+    isGenerated: boolean;
+    isId: boolean;
+    isList: boolean;
+    isReadOnly: boolean;
+    isRequired: boolean;
+    isUnique: boolean;
+    isUpdatedAt: boolean;
+    kind: "scalar" | "object" | "enum";
+    type: string;
+    relationFromFields?: any[];
+    relationName?: string;
+    relationOnDelete?: string;
+    relationToFields?: any[];
+  }[];
+  idFields: any[];
+  uniqueFields: any[];
+  uniqueIndexes: any[];
+  isGenerated: boolean;
+}
 export interface DML {
   enums: any[];
-  models: {
-    name: string;
-    isEmbedded: boolean;
-    dbName: string | null;
-    fields: {
-      name: string;
-      hasDefaultValue: boolean;
-      isGenerated: boolean;
-      isId: boolean;
-      isList: boolean;
-      isReadOnly: boolean;
-      isRequired: boolean;
-      isUnique: boolean;
-      isUpdatedAt: boolean;
-      kind: "scalar" | "object" | "enum";
-      type: string;
-      relationFromFields?: any[];
-      relationName?: string;
-      relationOnDelete?: string;
-      relationToFields?: any[];
-    }[];
-    idFields: any[];
-    uniqueFields: any[];
-    uniqueIndexes: any[];
-    isGenerated: boolean;
-  }[];
+  models: DMLModel[];
 }
 
 function renderDml(dml: DML) {
@@ -87,10 +88,44 @@ ${model.fields
   return diagram + "\n" + classes + "\n" + relationShips;
 }
 
+export const mapPrismaToDb = (dmlModels: DMLModel[], dataModel: string) => {
+  const splitDataModel = dataModel
+    ?.split("\n")
+    .filter((line) => line.includes("@map"))
+    .map((line) => line.trim());
+
+  return dmlModels.map((model) => {
+    return {
+      ...model,
+      fields: model.fields.map((field) => {
+        // get line with field to \n
+        const lineInDataModel = splitDataModel.find((line) =>
+          line.includes(`${field.name}`)
+        );
+        if (lineInDataModel) {
+          const startingMapIndex = lineInDataModel.indexOf("@map") + 6;
+          const modelField = lineInDataModel.substring(
+            startingMapIndex,
+            lineInDataModel.substring(startingMapIndex).indexOf('")') +
+              startingMapIndex
+          );
+          if (modelField) {
+            field = { ...field, name: modelField };
+          }
+        }
+
+        return field;
+      }),
+    };
+  });
+};
+
 export default async (req, res) => {
   try {
     const datamodelString = await parseDatamodel(req.body);
     const dml: DML = JSON.parse(datamodelString);
+    // updating dml to map to db table and column names (@map && @@map)
+    dml.models = mapPrismaToDb(dml.models, datamodelString);
     const mermaid = renderDml(dml);
     res.status(200).send(mermaid);
   } catch (error) {
