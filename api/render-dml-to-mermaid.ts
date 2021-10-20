@@ -90,7 +90,7 @@ ${model.fields
 
 export const mapPrismaToDb = (dmlModels: DMLModel[], dataModel: string) => {
   const splitDataModel = dataModel
-    ?.split("\n")
+    .split("\n")
     .filter((line) => line.includes("@map"))
     .map((line) => line.trim());
 
