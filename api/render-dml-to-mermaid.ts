@@ -125,7 +125,7 @@ export default async (req, res) => {
     const datamodelString = await parseDatamodel(req.body);
     let dml: DML = JSON.parse(datamodelString);
     // updating dml to map to db table and column names (@map && @@map)
-    // dml.models = mapPrismaToDb(dml.models, datamodelString);
+    dml.models = mapPrismaToDb(dml.models, datamodelString);
     const mermaid = renderDml(dml);
     res.status(200).send(mermaid);
   } catch (error) {
