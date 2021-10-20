@@ -88,10 +88,7 @@ ${model.fields
   return diagram + "\n" + classes + "\n" + relationShips;
 }
 
-export const mapPrismaToDb = async (
-  dmlModels: DMLModel[],
-  dataModel: string
-) => {
+export const mapPrismaToDb = (dmlModels: DMLModel[], dataModel: string) => {
   const splitDataModel = dataModel
     ?.split("\n")
     .filter((line) => line.includes("@map"))
@@ -126,9 +123,9 @@ export const mapPrismaToDb = async (
 export default async (req, res) => {
   try {
     const datamodelString = await parseDatamodel(req.body);
-    const dml: DML = JSON.parse(datamodelString);
+    let dml: DML = JSON.parse(datamodelString);
     // updating dml to map to db table and column names (@map && @@map)
-    dml.models = await mapPrismaToDb(dml.models, req.body);
+    // dml.models = mapPrismaToDb(dml.models, datamodelString);
     const mermaid = renderDml(dml);
     res.status(200).send(mermaid);
   } catch (error) {
