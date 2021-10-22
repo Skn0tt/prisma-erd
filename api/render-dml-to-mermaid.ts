@@ -37,7 +37,7 @@ function renderDml(dml: DML) {
   const classes = dml.models
     .map(
       (model) =>
-        `  ${model.name} {
+        `  ${model.dbName || model.name} {
 ${model.fields
   .filter(
     (field) =>
