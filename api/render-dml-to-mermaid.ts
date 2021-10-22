@@ -68,15 +68,15 @@ ${model.fields
         } else if (!field.isRequired) {
           thisSideMultiplicity = "|o";
         }
-        const otherModel = dml.models.find((model) => model.name == otherSide);
-        const otherField = otherModel.fields.find(
+        const otherModel = dml.models.find((model) => model.name === otherSide);
+        const otherField = otherModel?.fields.find(
           ({ relationName }) => relationName === field.relationName
         );
 
         let otherSideMultiplicity = "||";
-        if (otherField.isList) {
+        if (otherField?.isList) {
           thisSideMultiplicity = "o{";
-        } else if (!otherField.isRequired) {
+        } else if (!otherField?.isRequired) {
           thisSideMultiplicity = "o|";
         }
 
