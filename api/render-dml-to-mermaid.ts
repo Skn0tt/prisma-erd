@@ -59,7 +59,7 @@ ${model.fields
     for (const field of model.fields) {
       if (field.relationFromFields && field.relationFromFields.length > 0) {
         const relationshipName = field.name;
-        const thisSide = model.name;
+        const thisSide = model.dbName || model.name;
         const otherSide = field.type;
 
         let thisSideMultiplicity = "||";
