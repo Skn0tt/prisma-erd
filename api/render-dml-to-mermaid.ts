@@ -80,7 +80,9 @@ ${model.fields
           thisSideMultiplicity = "o|";
         }
 
-        relationShips += `    ${thisSide} ${thisSideMultiplicity}--${otherSideMultiplicity} ${otherSide} : "${relationshipName}"\n`;
+        relationShips += `    ${thisSide} ${thisSideMultiplicity}--${otherSideMultiplicity} ${
+          otherModel?.dbName || otherSide
+        } : "${relationshipName}"\n`;
       }
     }
   }
