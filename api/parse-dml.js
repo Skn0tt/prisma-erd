@@ -65,6 +65,7 @@ export async function parseDatamodel(model) {
 }
 
 export default async (req, res) => {
+  console.log(process.env)
   const datamodel = await parseDatamodel(req.body);
   res.status(200).send(datamodel);
 };
