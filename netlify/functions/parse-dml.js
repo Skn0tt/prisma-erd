@@ -5,6 +5,11 @@ import fs from "fs";
 const engineBasePath = path.resolve(
   __dirname,
   "..",
+  "..",
+  "..",
+  "..",
+  "..",
+  "..",
   "node_modules",
   "@prisma",
   "engines"
@@ -64,7 +69,13 @@ export async function parseDatamodel(model) {
   return getDataModelFieldWithoutParsing(parsed);
 }
 
-export default async (req, res) => {
-  const datamodel = await parseDatamodel(req.body);
-  res.status(200).send(datamodel);
+export const handler = async (event) => {
+  const datamodel = await parseDatamodel(event.body);
+  return {
+    statusCode: 200,
+    body: JSON.stringify(datamodel),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
 };

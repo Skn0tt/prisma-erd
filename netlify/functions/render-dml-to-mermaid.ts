@@ -87,14 +87,20 @@ ${model.fields
   return diagram + "\n" + classes + "\n" + relationShips;
 }
 
-export default async (req, res) => {
+export const handler = async (event) => {
   try {
-    const datamodelString = await parseDatamodel(req.body);
+    const datamodelString = await parseDatamodel(event.body);
     const dml: DML = JSON.parse(datamodelString);
     const mermaid = renderDml(dml);
-    res.status(200).send(mermaid);
+    return {
+      statusCode: 200,
+      body: mermaid,
+    }
   } catch (error) {
     console.log(error);
-    res.status(400).send(error);
+    return {
+      statusCode: 400,
+      body: error,
+    }
   }
 };

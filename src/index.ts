@@ -9,7 +9,7 @@ const schemaInput = document.getElementById(
 ) as HTMLTextAreaElement;
 
 document.getElementById("transform").onclick = async () => {
-  const response = await fetch("/api/render-dml-to-mermaid", {
+  const response = await fetch("/.netlify/functions/render-dml-to-mermaid", {
     method: "POST",
     body: schemaInput.value,
     headers: {
