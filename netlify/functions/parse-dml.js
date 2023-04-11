@@ -5,6 +5,7 @@ import fs from "fs";
 const engineBasePath = path.resolve(
   __dirname,
   "..",
+  "..",
   "node_modules",
   "@prisma",
   "engines"
