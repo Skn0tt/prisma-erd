@@ -100,7 +100,7 @@ export const handler = async (event) => {
     console.log(error);
     return {
       statusCode: 400,
-      body: error,
+      body: String(error),
     }
   }
 };
