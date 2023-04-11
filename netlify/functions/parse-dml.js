@@ -8,8 +8,6 @@ const engineBasePath = path.resolve(
   "..",
   "..",
   "..",
-  "..",
-  "..",
   "node_modules",
   "@prisma",
   "engines"
