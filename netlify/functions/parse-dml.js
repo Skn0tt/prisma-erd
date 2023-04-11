@@ -52,11 +52,12 @@ export async function parseDatamodel(model) {
     );
     let output = "";
     process.stderr.on("data", (l) => {
+      console.log({ l })
       if (l.includes("error:")) {
         reject(l.slice(l.indexOf("error:"), l.indexOf("\\n")));
       }
     });
-    process.stdout.on("data", (d) => (output += d));
+    process.stdout.on("data", (d) => console.log({ d }) || (output += d));
     process.on("exit", () => {
       resolve(output);
     });
