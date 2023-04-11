@@ -1,38 +1,13 @@
-import { parseDatamodel } from "./parse-dml";
+import { getDMMF } from "@prisma/internals";
 
-export interface DML {
-  enums: any[];
-  models: {
-    name: string;
-    isEmbedded: boolean;
-    dbName: string | null;
-    fields: {
-      name: string;
-      hasDefaultValue: boolean;
-      isGenerated: boolean;
-      isId: boolean;
-      isList: boolean;
-      isReadOnly: boolean;
-      isRequired: boolean;
-      isUnique: boolean;
-      isUpdatedAt: boolean;
-      kind: "scalar" | "object" | "enum";
-      type: string;
-      relationFromFields?: any[];
-      relationName?: string;
-      relationOnDelete?: string;
-      relationToFields?: any[];
-    }[];
-    idFields: any[];
-    uniqueFields: any[];
-    uniqueIndexes: any[];
-    isGenerated: boolean;
-  }[];
-}
+type PromiseResolvedType<T> = T extends Promise<infer R> ? R : never;
+type ReturnedPromiseResolvedType<T extends (...args: any) => any> =
+  PromiseResolvedType<ReturnType<T>>;
 
-function renderDml(dml: DML) {
+function renderDml(dmmf: ReturnedPromiseResolvedType<typeof getDMMF>) {
   let diagram = "erDiagram";
 
+  const dml = dmmf.datamodel;
   const classes = dml.models
     .map(
       (model) =>
@@ -68,14 +43,14 @@ ${model.fields
           thisSideMultiplicity = "|o";
         }
         const otherModel = dml.models.find((model) => model.name == otherSide);
-        const otherField = otherModel.fields.find(
+        const otherField = otherModel!.fields.find(
           ({ relationName }) => relationName === field.relationName
         );
 
         let otherSideMultiplicity = "||";
-        if (otherField.isList) {
+        if (otherField!.isList) {
           thisSideMultiplicity = "o{";
-        } else if (!otherField.isRequired) {
+        } else if (!otherField!.isRequired) {
           thisSideMultiplicity = "o|";
         }
 
@@ -89,18 +64,17 @@ ${model.fields
 
 export const handler = async (event) => {
   try {
-    const datamodelString = await parseDatamodel(event.body);
-    const dml: DML = JSON.parse(datamodelString);
-    const mermaid = renderDml(dml);
+    const dmmf = await getDMMF({ datamodel: event.body });
+    const mermaid = renderDml(dmmf);
     return {
       statusCode: 200,
       body: mermaid,
-    }
+    };
   } catch (error) {
     console.log(error);
     return {
       statusCode: 400,
       body: String(error),
-    }
+    };
   }
 };

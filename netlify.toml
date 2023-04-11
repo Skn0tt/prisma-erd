@@ -4,4 +4,4 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["@prisma/engines"]
+  external_node_modules = ["@prisma/prisma-fmt-wasm"]
