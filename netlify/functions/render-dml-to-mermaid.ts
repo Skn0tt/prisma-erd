@@ -90,6 +90,7 @@ ${model.fields
 export const handler = async (event) => {
   try {
     const datamodelString = await parseDatamodel(event.body);
+    console.log({ datamodelString })
     const dml: DML = JSON.parse(datamodelString);
     const mermaid = renderDml(dml);
     return {
