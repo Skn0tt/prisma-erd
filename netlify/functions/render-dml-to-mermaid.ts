@@ -36,18 +36,18 @@ ${model.fields
         const thisSide = model.name;
         const otherSide = field.type;
 
-        let thisSideMultiplicity = "||";
+        let otherSideMultiplicity = "||";
         if (field.isList) {
-          thisSideMultiplicity = "}o";
+          otherSideMultiplicity = "}o";
         } else if (!field.isRequired) {
-          thisSideMultiplicity = "|o";
+          otherSideMultiplicity = "|o";
         }
         const otherModel = dml.models.find((model) => model.name == otherSide);
         const otherField = otherModel!.fields.find(
           ({ relationName }) => relationName === field.relationName
         );
 
-        let otherSideMultiplicity = "||";
+        let thisSideMultiplicity = "||";
         if (otherField!.isList) {
           thisSideMultiplicity = "o{";
         } else if (!otherField!.isRequired) {
